@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="all">
+
+        <item android:id="@+id/nav_notes"
+            android:title="@string/notes"
+            android:icon="@drawable/ic_baseline_notes_24"/>
+
+        <item android:id="@+id/nav_reminder"
+            android:title="@string/reminders"
+            android:icon="@drawable/ic_baseline_notifications_none_24"/>
+
+        <item android:id="@+id/nav_new_label"
+            android:title="@string/create_new_label"
+            android:icon="@drawable/ic_baseline_add_24"/>
+
+        <item android:id="@+id/nav_archive"
+            android:title="@string/archive1"
+            android:icon="@drawable/ic_baseline_archive_24"/>
+
+        <item android:id="@+id/nav_trash"
+            android:title="@string/trash"
+            android:icon="@drawable/ic_baseline_delete_24"/>
+
+        <item android:id="@+id/nav_settings"
+            android:title="@string/settings"
+            android:icon="@drawable/ic_baseline_settings_24"/>
+
+        <item android:id="@+id/nav_help"
+            android:title="@string/help_amp_feedback"
+            android:icon="@drawable/ic_baseline_help_24"/>
+
+    </group>
+</menu>
