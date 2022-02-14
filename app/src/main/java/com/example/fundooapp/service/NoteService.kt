@@ -6,6 +6,7 @@ import com.example.fundooapp.model.Notes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
+
 class NoteService {
     private var firebaseAuth = FirebaseAuth.getInstance()
     private var firestore = FirebaseFirestore.getInstance()
@@ -32,3 +33,4 @@ class NoteService {
         val CONTENT = "content"
     }
 }
+

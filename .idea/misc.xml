@@ -10,6 +10,7 @@
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/drawable/ic_baseline_add_alert_24.xml" value="0.290625" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.28615384615384615" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/drawable/ic_baseline_notifications_none_24.xml" value="0.167" />
+        <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/drawable/ic_baseline_save_24.xml" value="0.1495" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.290625" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/drawable/ic_menu_camera.xml" value="0.290625" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.290625" />
@@ -23,7 +24,7 @@
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/drawable/view_bg.xml" value="0.290625" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/drawable/view_curve.xml" value="0.290625" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/activity_home.xml" value="0.22456140350877193" />
-        <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/activity_main.xml" value="0.2604166666666667" />
+        <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/activity_main.xml" value="0.4" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/activity_main2.xml" value="0.2604166666666667" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/activity_page.xml" value="0.23278985507246377" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/activity_page2.xml" value="0.23278985507246377" />
@@ -44,6 +45,7 @@
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/fragment_home.xml" value="0.23278985507246377" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/fragment_login.xml" value="0.2604166666666667" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/fragment_login_.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/fragment_note_view.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/fragment_profile.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/fragment_register_.xml" value="0.264" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/fragment_slideshow.xml" value="0.23278985507246377" />
@@ -51,7 +53,7 @@
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/header_menu.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/home_layout.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/nav_header_page.xml" value="0.23278985507246377" />
-        <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/notes_layout.xml" value="0.1" />
+        <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/notes_layout.xml" value="0.2" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/toolbar_layout.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/layout/toolbar_profile.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/lenovo/AndroidStudioProjects/FundooApp/app/src/main/res/menu/activity_main_drawer.xml" value="0.27447916666666666" />

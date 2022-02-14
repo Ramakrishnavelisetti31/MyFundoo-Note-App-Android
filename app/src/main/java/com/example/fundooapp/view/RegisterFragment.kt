@@ -30,8 +30,6 @@ class RegisterFragment : Fragment() {
     private lateinit var signUpButton: Button
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var registerViewModel: RegisterViewModel
-    private lateinit var profileFragment: ProfileFragment
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

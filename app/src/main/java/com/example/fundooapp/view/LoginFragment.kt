@@ -99,13 +99,13 @@ class LoginFragment : Fragment() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
-                    loginViewModel.googleSignIn(account.idToken!!)
-                    loginViewModel.googleLoginStatus.observe(viewLifecycleOwner, Observer {
-                        if (it.status) {
-                            sharedViewModel.setGoToHomePageStatus(true)
-                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                        }
-                    })
+                loginViewModel.googleSignIn(account.idToken!!)
+                loginViewModel.googleLoginStatus.observe(viewLifecycleOwner, Observer {
+                    if (it.status) {
+                        sharedViewModel.setGoToHomePageStatus(true)
+                        Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                    }
+                })
             } catch (e: ApiException) {
                 Toast.makeText(context, "Google sign in failed $e", Toast.LENGTH_SHORT).show()
                 Log.d("LoginFragment", "onActivityResult: ${e.printStackTrace()}")
@@ -125,7 +125,6 @@ class LoginFragment : Fragment() {
         loginViewModel.fundooLogIn(email, password)
         loginViewModel.loginStatus.observe(viewLifecycleOwner, Observer {
             if (it.status) {
-                fetchUserDetails(user)
                 sharedViewModel.setGoToHomePageStatus(true)
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
             }
@@ -133,13 +132,6 @@ class LoginFragment : Fragment() {
                 sharedViewModel.setGoToLoginPageStatus(true)
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
             }
-        })
-    }
-
-    private fun fetchUserDetails(user: User) {
-        sharedViewModel.fetchUserDetails(user)
-        sharedViewModel.userDetails.observe(viewLifecycleOwner, Observer {
-            sharedViewModel.setGoToHomePageStatus(true)
         })
     }
 

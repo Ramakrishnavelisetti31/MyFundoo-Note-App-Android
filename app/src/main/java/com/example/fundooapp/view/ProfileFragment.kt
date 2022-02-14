@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +18,8 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.fundooapp.R
@@ -28,22 +29,25 @@ import com.example.fundooapp.viewmodel.ProfileViewModelFactory
 import com.example.fundooapp.viewmodel.SharedViewModel
 import com.example.fundooapp.viewmodel.SharedViewModelFactory
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class ProfileFragment : DialogFragment() {
-        private lateinit var sharedViewModel: SharedViewModel
-        private lateinit var profileViewModel: ProfileViewModel
-        private lateinit var signOutButton: Button
-        private lateinit var profilePicture: ShapeableImageView
-        private lateinit var cancelButton: ImageButton
-        private lateinit var userEmail: TextView
-        private lateinit var userName: TextView
-        private val CAMERA_REQUEST = 100
-        private val STORAGE_REQUEST = 200
-        private val IMAGEPICK_GALLERY_REQUEST = 300
-        private val IMAGE_PICKCAMERA_REQUEST = 400
-        private lateinit var imageUri: Uri
-
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var sharedViewModel: SharedViewModel
+    private lateinit var profileViewModel: ProfileViewModel
+    private lateinit var signOutButton: Button
+    private lateinit var profilePicture: ShapeableImageView
+    private lateinit var cancelButton: ImageButton
+    private lateinit var userEmail: TextView
+    private lateinit var userName: TextView
+    private val CAMERA_REQUEST = 100
+    private val STORAGE_REQUEST = 200
+    private val IMAGEPICK_GALLERY_REQUEST = 300
+    private val IMAGE_PICKCAMERA_REQUEST = 400
+    private lateinit var imageUri: Uri
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,6 +59,8 @@ class ProfileFragment : DialogFragment() {
         userEmail = view.findViewById(R.id.email_viewer)
         userName = view.findViewById(R.id.name_viewer)
         cancelButton = view.findViewById(R.id.close_profile_fragment)
+        firebaseAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         sharedViewModel = ViewModelProvider(requireActivity(), SharedViewModelFactory(UserAuthService())) [SharedViewModel::class.java]
         profileViewModel = ViewModelProvider(this, ProfileViewModelFactory(UserAuthService())) [ProfileViewModel::class.java]
@@ -62,10 +68,10 @@ class ProfileFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        signOutButton.setOnClickListener { signOut() }
+        getDataFromFirestore()
         cancelButton.setOnClickListener { dismiss() }
         profilePicture.setOnClickListener { showImagePicDialog() }
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun showImagePicDialog() {
@@ -73,20 +79,20 @@ class ProfileFragment : DialogFragment() {
         val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Pick Image From")
         builder.setItems(options,  DialogInterface.OnClickListener { dialog, which ->
-                if (which == 0) {
-                    if (!checkCameraPermission()!!) {
-                        requestCameraPermission()
-                    } else {
-                        pickFromCamera()
-                    }
-                } else if (which == 1) {
-                    if (!checkStoragePermission()!!) {
-                        requestStoragePermission()
-                    } else {
-                        pickFromGallery()
-                    }
+            if (which == 0) {
+                if (!checkCameraPermission()!!) {
+                    requestCameraPermission()
+                } else {
+                    pickFromCamera()
                 }
-            })
+            } else if (which == 1) {
+                if (!checkStoragePermission()!!) {
+                    requestStoragePermission()
+                } else {
+                    pickFromGallery()
+                }
+            }
+        })
         builder.create().show()
     }
 
@@ -118,12 +124,20 @@ class ProfileFragment : DialogFragment() {
         requestPermissions(arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), CAMERA_REQUEST)
     }
 
-    fun setProfileDetails() {
-        sharedViewModel.userDetails.observe(viewLifecycleOwner, Observer {
-            userName.text = it.fullName
-            userEmail.text = it.email
-            Glide.with(this).load(it.imgUrl).into(profilePicture)
-        })
+    private fun getDataFromFirestore() {
+        firestore.collection("users").document(firebaseAuth.currentUser!!.uid).get().addOnCompleteListener {
+            if (it.result.exists()) {
+                var nameResult = it.result.getString("name")
+                var emailResult = it.result.getString("email")
+                var urlResult = it.result.getString("img_url")?.toUri()
+
+                Glide.with(this).load(urlResult).into(profilePicture)
+                userName.text = nameResult
+                userEmail.text = emailResult
+            } else {
+                Log.d(ContentValues.TAG, "get failed with ", it.exception)
+            }
+        }
     }
 
     private fun pickFromGallery() {
@@ -134,24 +148,14 @@ class ProfileFragment : DialogFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == IMAGEPICK_GALLERY_REQUEST) {
+            if (requestCode == IMAGEPICK_GALLERY_REQUEST || requestCode == IMAGE_PICKCAMERA_REQUEST) {
                 if (data != null) {
                     imageUri = data.data!!
-                    Glide.with(this).load(imageUri).into(profilePicture).view
                     profileViewModel.uploadImage(imageUri)
+                    Glide.with(this).load(imageUri).into(profilePicture)
                 }
             }
-            if (requestCode == IMAGE_PICKCAMERA_REQUEST) {
-                if (data != null) {
-                    imageUri = data.data!!
-                    Glide.with(this).load(imageUri).into(profilePicture).view
-                    profileViewModel.uploadImage(imageUri)
-                }
-            }
+            super.onActivityResult(requestCode, resultCode, data)
         }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    private fun signOut() {
     }
 }

@@ -8,4 +8,5 @@ class SharedViewModelFactory(val userAuthService: UserAuthService): ViewModelPro
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return SharedViewModel(userAuthService) as T
     }
+    
 }

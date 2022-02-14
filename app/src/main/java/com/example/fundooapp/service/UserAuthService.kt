@@ -6,15 +6,20 @@ import android.util.Log
 import com.example.fundooapp.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class UserAuthService {
-    private var firebaseAuth = FirebaseAuth.getInstance()
-    private var firestore = FirebaseFirestore.getInstance()
-    private var storageReference = FirebaseStorage.getInstance().reference
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var storageReference: StorageReference
+
+    init {
+        firebaseAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+        storageReference = FirebaseStorage.getInstance().reference
+    }
 
     fun userLogIn(email: String, password: String, listener: (AuthListener) -> Unit) {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
@@ -67,19 +72,6 @@ class UserAuthService {
         }
     }
 
-    fun getDataFromFirestore(listener: (User) -> Unit) {
-        firebaseAuth.currentUser.let {
-                firestore.collection("users").document(it!!.uid).addSnapshotListener {
-                    value: DocumentSnapshot?, exception: FirebaseFirestoreException? ->
-                    if (value != null) {
-                        listener(User(fullName = value.getString(NAME).toString(),
-                        email = value.getString(EMAIL).toString(),
-                        imgUrl = value.getString(IMG_URL).toString()))
-                    }
-                }
-            }
-        }
-
     fun googleLogIn(idToken: String, listener: (AuthListener) -> Unit) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
@@ -87,10 +79,6 @@ class UserAuthService {
                 listener(AuthListener(true, "Logged in Successfully"))
             }
         }
-    }
-
-    fun signOut() {
-        firebaseAuth.signOut()
     }
 
     companion object {
