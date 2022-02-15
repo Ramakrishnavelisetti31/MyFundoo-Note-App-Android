@@ -3,6 +3,7 @@ package com.example.fundooapp.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.fundooapp.model.User
 import com.example.fundooapp.service.AuthListener
 import com.example.fundooapp.service.UserAuthService
 
@@ -12,8 +13,8 @@ class LoginViewModel(val userAuthService: UserAuthService): ViewModel() {
     private val _googleLoginStatus = MutableLiveData<AuthListener>()
     val googleLoginStatus =  _googleLoginStatus as LiveData<AuthListener>
 
-    fun fundooLogIn(email: String, password: String) {
-        userAuthService.userLogIn(email, password) {
+    fun fundooLogIn(user: User) {
+        userAuthService.userLogIn(user) {
             if (it.status) {
                 _loginStatus.value = it
             }

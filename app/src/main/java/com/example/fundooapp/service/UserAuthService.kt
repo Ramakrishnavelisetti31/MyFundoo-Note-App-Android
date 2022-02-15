@@ -1,8 +1,12 @@
 package com.example.fundooapp.service
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
+import com.example.fundooapp.model.Constant
+import com.example.fundooapp.model.SharedPreference
 import com.example.fundooapp.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -21,8 +25,8 @@ class UserAuthService {
         storageReference = FirebaseStorage.getInstance().reference
     }
 
-    fun userLogIn(email: String, password: String, listener: (AuthListener) -> Unit) {
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+    fun userLogIn(user: User, listener: (AuthListener) -> Unit) {
+        firebaseAuth.signInWithEmailAndPassword(user.email,user.password).addOnCompleteListener {
             if (it.isSuccessful) {
                 listener(AuthListener(true, "Logged in Successfully"))
             }
@@ -40,7 +44,7 @@ class UserAuthService {
     }
 
 
-    fun storeImageToFireStore(imageUri: Uri) {
+    fun storeImageToFireStore(imageUri: Uri, context: Context) {
         val fileRef =
             storageReference.child("users/" + firebaseAuth.currentUser!!.uid + "/profilePicture.jpg")
         val uploadTask = fileRef.putFile(imageUri)
@@ -48,6 +52,8 @@ class UserAuthService {
             fileRef.downloadUrl.addOnCompleteListener {
                 firestore.collection("users").document(firebaseAuth.currentUser!!.uid)
                     .update(IMG_URL, imageUri.toString())
+                    SharedPreference.initSharedPreferences(context)
+                    SharedPreference.addString(Constant.USER_PROFILE_PICTURE, imageUri.toString())
             }
         }
     }
@@ -70,6 +76,25 @@ class UserAuthService {
                     }
                 }
         }
+    }
+
+    fun getDataFromFirestore(context: Context, listener: (AuthListener) -> Unit){
+        firestore.collection("users").document(firebaseAuth.currentUser!!.uid).get()
+            .addOnCompleteListener {
+                if (it.result.exists()) {
+                    var nameResult = it.result.getString("name").toString()
+                    var emailResult = it.result.getString("email").toString()
+                    var imageUrl = it.result.getString("img_url")?.toUri().toString()
+                    SharedPreference.initSharedPreferences(context)
+                    SharedPreference.addString(Constant.USER_NAME, nameResult)
+                    SharedPreference.addString(Constant.USER_EMAIL, emailResult)
+                    SharedPreference.addString(Constant.USER_PROFILE_PICTURE, imageUrl)
+                    listener(AuthListener(true, "Fetched data successfully"))
+                    Log.d("UserAuthService", "get failed with ${SharedPreference.getString(Constant.USER_NAME)} ${emailResult} ${imageUrl}")
+                } else {
+                    Log.d("UserAuthService", "get the data $it")
+                }
+            }
     }
 
     fun googleLogIn(idToken: String, listener: (AuthListener) -> Unit) {

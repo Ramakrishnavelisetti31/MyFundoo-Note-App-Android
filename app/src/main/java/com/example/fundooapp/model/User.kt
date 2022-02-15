@@ -1,11 +1,11 @@
 package com.example.fundooapp.model
 
 data class User(
-    val fullName: String = "",
+    var fullName: String = "",
     val userId: String = "",
-    val email: String = "",
+    var email: String = "",
     val password: String = "",
     val confirmPassword: String = "",
-    val imgUrl: String = ""
+    var imgUrl: String = ""
 )
 

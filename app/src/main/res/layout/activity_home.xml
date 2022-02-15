@@ -13,6 +13,11 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent" />
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/write_note_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -21,10 +26,5 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/header_menu"
         app:menu="@menu/main_menu"/>
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerNote"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

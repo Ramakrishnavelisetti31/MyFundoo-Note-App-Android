@@ -2,6 +2,8 @@ package com.example.fundooapp.service
 
 import android.content.ContentValues
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.fundooapp.model.Notes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,6 +28,23 @@ class NoteService {
                     }
                 }
         }
+    }
+
+     fun getNotesFromFirestore(): LiveData<MutableList<Notes>> {
+         val mutableData = MutableLiveData<MutableList<Notes>>()
+         firestore.collection("users").document(firebaseAuth.currentUser!!.uid).collection("myNotes").get()
+            .addOnSuccessListener { list ->
+                val noteList = mutableListOf<Notes>()
+                for (document in list) {
+                    val title = document.getString("title")
+                    val content = document.getString("content")
+                    val notes = Notes(title!!, content!!)
+                    noteList.add(notes)
+                    Log.d("NoteService", "get the data $noteList")
+                }
+                mutableData.value = noteList
+            }
+         return mutableData
     }
 
     companion object {

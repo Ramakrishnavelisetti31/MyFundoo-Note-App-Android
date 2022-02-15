@@ -18,4 +18,12 @@ class NoteViewModel(val noteService: NoteService): ViewModel() {
             }
         }
     }
+
+    fun getNotes(): LiveData<MutableList<Notes>> {
+        val mutableData = MutableLiveData<MutableList<Notes>>()
+        noteService.getNotesFromFirestore().observeForever { userList ->
+            mutableData.value = userList
+        }
+        return mutableData
+    }
 }

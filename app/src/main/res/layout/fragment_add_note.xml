@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/backGround"
-    tools:context=".view.AddNoteFragment">
+    tools:context=".view.AddAndUpdateNoteFragment">
 
     <ImageButton
         android:id="@+id/back_button"
@@ -16,7 +16,7 @@
         android:clickable="true"/>
 
     <EditText
-        android:id="@+id/write_title"
+        android:id="@+id/write_edit_title"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_below="@id/back_button"
@@ -33,7 +33,7 @@
             android:id="@+id/write_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/write_title"
+            android:layout_below="@id/write_edit_title"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"

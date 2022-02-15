@@ -18,7 +18,7 @@ import com.example.fundooapp.viewmodel.NoteViewModel
 import com.example.fundooapp.viewmodel.NoteViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class AddNoteFragment : Fragment() {
+class AddAndUpdateNoteFragment : Fragment() {
     private lateinit var writeTitle: EditText
     private lateinit var writeContent: EditText
     private lateinit var goToHome: ImageButton
@@ -30,7 +30,7 @@ class AddNoteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_add_note, container, false)
-        writeTitle = view.findViewById(R.id.write_title)
+        writeTitle = view.findViewById(R.id.write_edit_title)
         writeContent = view.findViewById(R.id.write_content)
         goToHome = view.findViewById(R.id.back_button)
         saveNoteFabButton = view.findViewById(R.id.save_note_fab_button)

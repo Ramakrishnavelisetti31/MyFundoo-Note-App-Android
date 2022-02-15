@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,19 +22,17 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.fundooapp.R
+import com.example.fundooapp.model.Constant
+import com.example.fundooapp.model.SharedPreference
 import com.example.fundooapp.service.UserAuthService
 import com.example.fundooapp.viewmodel.ProfileViewModel
 import com.example.fundooapp.viewmodel.ProfileViewModelFactory
 import com.example.fundooapp.viewmodel.SharedViewModel
 import com.example.fundooapp.viewmodel.SharedViewModelFactory
 import com.google.android.material.imageview.ShapeableImageView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 
 
 class ProfileFragment : DialogFragment() {
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var firestore: FirebaseFirestore
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var signOutButton: Button
@@ -59,16 +56,15 @@ class ProfileFragment : DialogFragment() {
         userEmail = view.findViewById(R.id.email_viewer)
         userName = view.findViewById(R.id.name_viewer)
         cancelButton = view.findViewById(R.id.close_profile_fragment)
-        firebaseAuth = FirebaseAuth.getInstance()
-        firestore = FirebaseFirestore.getInstance()
-
         sharedViewModel = ViewModelProvider(requireActivity(), SharedViewModelFactory(UserAuthService())) [SharedViewModel::class.java]
         profileViewModel = ViewModelProvider(this, ProfileViewModelFactory(UserAuthService())) [ProfileViewModel::class.java]
+        profileViewModel.getData(requireContext())
+        SharedPreference.initSharedPreferences(requireContext())
+        displayUserData()
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        getDataFromFirestore()
         cancelButton.setOnClickListener { dismiss() }
         profilePicture.setOnClickListener { showImagePicDialog() }
         super.onViewCreated(view, savedInstanceState)
@@ -124,20 +120,11 @@ class ProfileFragment : DialogFragment() {
         requestPermissions(arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), CAMERA_REQUEST)
     }
 
-    private fun getDataFromFirestore() {
-        firestore.collection("users").document(firebaseAuth.currentUser!!.uid).get().addOnCompleteListener {
-            if (it.result.exists()) {
-                var nameResult = it.result.getString("name")
-                var emailResult = it.result.getString("email")
-                var urlResult = it.result.getString("img_url")?.toUri()
-
-                Glide.with(this).load(urlResult).into(profilePicture)
-                userName.text = nameResult
-                userEmail.text = emailResult
-            } else {
-                Log.d(ContentValues.TAG, "get failed with ", it.exception)
-            }
-        }
+    private fun displayUserData() {
+        userName.text = SharedPreference.getString(Constant.USER_NAME)
+        userEmail.text = SharedPreference.getString(Constant.USER_EMAIL)
+        var uri = SharedPreference.getString(Constant.USER_PROFILE_PICTURE).toUri()
+        Glide.with(this).load(uri).into(profilePicture)
     }
 
     private fun pickFromGallery() {
@@ -151,7 +138,7 @@ class ProfileFragment : DialogFragment() {
             if (requestCode == IMAGEPICK_GALLERY_REQUEST || requestCode == IMAGE_PICKCAMERA_REQUEST) {
                 if (data != null) {
                     imageUri = data.data!!
-                    profileViewModel.uploadImage(imageUri)
+                    profileViewModel.uploadImage(imageUri, requireContext())
                     Glide.with(this).load(imageUri).into(profilePicture)
                 }
             }
