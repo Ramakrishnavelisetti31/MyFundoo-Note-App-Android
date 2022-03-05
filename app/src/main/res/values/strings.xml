@@ -73,4 +73,5 @@
     <string name="labels">Labels</string>
     <string name="title">Title</string>
     <string name="note">Note</string>
+    <string name="unarchive">UnArchive</string>
 </resources>

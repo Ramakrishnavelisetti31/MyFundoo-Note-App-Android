@@ -30,11 +30,13 @@ import com.example.fundooapp.viewmodel.ProfileViewModelFactory
 import com.example.fundooapp.viewmodel.SharedViewModel
 import com.example.fundooapp.viewmodel.SharedViewModelFactory
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.firebase.auth.FirebaseAuth
 
 
 class ProfileFragment : DialogFragment() {
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var profileViewModel: ProfileViewModel
+    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var signOutButton: Button
     private lateinit var profilePicture: ShapeableImageView
     private lateinit var cancelButton: ImageButton
@@ -58,6 +60,7 @@ class ProfileFragment : DialogFragment() {
         cancelButton = view.findViewById(R.id.close_profile_fragment)
         sharedViewModel = ViewModelProvider(requireActivity(), SharedViewModelFactory(UserAuthService())) [SharedViewModel::class.java]
         profileViewModel = ViewModelProvider(this, ProfileViewModelFactory(UserAuthService())) [ProfileViewModel::class.java]
+        firebaseAuth = FirebaseAuth.getInstance()
         profileViewModel.getData(requireContext())
         SharedPreference.initSharedPreferences(requireContext())
         displayUserData()
@@ -67,6 +70,7 @@ class ProfileFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         cancelButton.setOnClickListener { dismiss() }
         profilePicture.setOnClickListener { showImagePicDialog() }
+        signOutButton.setOnClickListener { logOut() }
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -144,5 +148,10 @@ class ProfileFragment : DialogFragment() {
             }
             super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    private fun logOut(){
+        firebaseAuth.signOut()
+        sharedViewModel.setGoToLoginPageStatus(true)
     }
 }

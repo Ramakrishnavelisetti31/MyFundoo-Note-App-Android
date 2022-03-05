@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/backGround"
-    tools:context=".view.AddNoteFragment">
+    tools:context=".view.EditNoteFragment">
 
     <ImageButton
-        android:id="@+id/back_button"
+        android:id="@+id/button_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/backGround"
@@ -16,10 +16,10 @@
         android:clickable="true"/>
 
     <EditText
-        android:id="@+id/write_edit_title"
+        android:id="@+id/edit_title"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_below="@id/back_button"
+        android:layout_below="@id/button_back"
         android:layout_margin="10dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
@@ -29,21 +29,21 @@
         android:paddingLeft="15dp"
         android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/write_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/write_edit_title"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="top|left"
-            android:hint="@string/note"
-            android:textSize="15sp"
-            android:padding="15dp"/>
+    <EditText
+        android:id="@+id/edit_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/edit_title"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="top|left"
+        android:hint="@string/note"
+        android:textSize="15sp"
+        android:padding="15dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/save_note_fab_button"
+        android:id="@+id/edit_note_fab_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -51,7 +51,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
-        android:src="@drawable/ic_baseline_save_24"
+        android:src="@drawable/ic_baseline_edit_24"
         app:maxImageSize="30dp" />
 
 </RelativeLayout>

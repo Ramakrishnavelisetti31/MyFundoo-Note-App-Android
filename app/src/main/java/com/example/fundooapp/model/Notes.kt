@@ -1,7 +1,11 @@
 package com.example.fundooapp.model
 
+import java.io.Serializable
+
 data class Notes(
-    val title: String = "",
-    val content: String = "",
-    var id: String? = null
-)
+    var title: String = "",
+    var content: String = "",
+    var noteId: String = "",
+    var userId: String= "",
+    var archive: Boolean = false
+) : Serializable

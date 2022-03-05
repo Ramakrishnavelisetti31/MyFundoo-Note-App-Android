@@ -32,12 +32,13 @@
             android:id="@+id/recycler_layout_changer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_grid_view_24"
+            android:src="@drawable/ic_baseline_single_column_24"
             android:layout_gravity="end"
             android:layout_marginEnd="5dp"
             android:backgroundTint="@color/white"
             android:clickable="true"
             android:focusable="true" />
+
         <SearchView
             android:id="@+id/search"
             android:layout_width="wrap_content"

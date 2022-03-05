@@ -2,11 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/archive_note"
-        android:title="@string/archive1"
+        android:title="@string/unarchive"
         android:icon="@drawable/ic_baseline_notes_24"/>
-
-    <item android:id="@+id/delete_note"
-        android:title="@string/delete"
-        android:icon="@drawable/ic_baseline_notifications_none_24"/>
 
 </menu>
