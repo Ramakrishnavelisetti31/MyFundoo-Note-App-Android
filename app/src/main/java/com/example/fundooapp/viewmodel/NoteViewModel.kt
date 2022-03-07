@@ -18,9 +18,6 @@ class NoteViewModel(val noteService: NoteService): ViewModel() {
     private val _editNoteStatus = MutableLiveData<AuthListener>()
     val editNoteStatus =  _editNoteStatus as LiveData<AuthListener>
 
-    private val _getArchiveNoteStatus = MutableLiveData<Notes>()
-    val getArchiveNoteStatus =  _getArchiveNoteStatus as LiveData<Notes>
-
     fun addNotes(notes: Notes, context: Context) {
         noteService.storeNoteFirestore(notes, context) {
             if (it.status) {
@@ -45,8 +42,5 @@ class NoteViewModel(val noteService: NoteService): ViewModel() {
         }
     }
 
-    fun archiveNotes(notes: Notes) {
-        _getArchiveNoteStatus.value = notes
-    }
 }
 

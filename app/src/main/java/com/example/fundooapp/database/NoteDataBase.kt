@@ -32,7 +32,7 @@ class NoteDataBase(context: Context) :
         values.put(FIRE_STORE_NOTE_ID, notes.noteId)
         values.put(FIRE_STORE_USER_ID, notes.userId)
         db.insert(TABLE_NAME, null, values)
-        db.close()
+//        db.close()
     }
 
     fun getData(): Cursor? {

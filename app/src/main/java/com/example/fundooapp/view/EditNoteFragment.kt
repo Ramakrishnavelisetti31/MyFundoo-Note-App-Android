@@ -60,19 +60,25 @@ class EditNoteFragment : Fragment() {
     private fun editNoteData() {
         val title = editTitle.text.toString()
         val content = editContent.text.toString()
-        val notes = Notes(title = title, content = content, noteId = id)
-        noteViewModel.editNotes(notes, requireContext())
-        noteViewModel.editNoteStatus.observe(viewLifecycleOwner, Observer {
-            if (it.status) {
-                val intent = Intent(requireContext(), HomeActivity::class.java)
-                startActivity(intent)
-            } else {
-                Toast.makeText(requireContext(), "Error in adding notes ", Toast.LENGTH_SHORT).show()
-            }
-        })
+        if (title.isEmpty() || content.isEmpty()) {
+            Toast.makeText(requireContext(), "Both Fields are required", Toast.LENGTH_SHORT).show()
+        } else {
+            val notes = Notes(title = title, content = content, noteId = id)
+            noteViewModel.editNotes(notes, requireContext())
+            noteViewModel.editNoteStatus.observe(viewLifecycleOwner, Observer {
+                if (it.status) {
+                    Toast.makeText(requireContext(), "NoteEdited ", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Error in adding notes ", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
+            val intent = Intent(requireContext(), HomeActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun goToHome() {
-        sharedViewModel.setGoToViewNotePage(true)
+        sharedViewModel.setGoToHomePageStatus(true)
     }
 }

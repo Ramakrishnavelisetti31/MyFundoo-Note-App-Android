@@ -6,25 +6,25 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.PopupMenu
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fundooapp.R
 import com.example.fundooapp.model.Notes
 import com.example.fundooapp.service.NoteService
+import java.util.*
 import kotlin.random.Random
 
 
 class NoteAdapter(private val context: Context,
-                  private var noteList: ArrayList<Notes>): RecyclerView.Adapter<NoteAdapter.MyViewHolder>() {
+                  private var noteList: ArrayList<Notes>): RecyclerView.Adapter<NoteAdapter.MyViewHolder>(), Filterable {
 
     private lateinit var noteService: NoteService
     private lateinit var bundle: Bundle
-    private lateinit var archiveNoteFragment: ArchiveNoteFragment
-    private lateinit var viewNotesFragment: ViewNotesFragment
+    private var allNotes = arrayListOf<Notes>().apply {
+        addAll(noteList)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteAdapter.MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.notes_layout, parent, false)
@@ -32,7 +32,7 @@ class NoteAdapter(private val context: Context,
     }
 
     override fun onBindViewHolder(holder: NoteAdapter.MyViewHolder, position: Int) {
-        val notes: Notes = noteList[position]
+        val notes: Notes = allNotes[position]
         holder.title.text = notes.title
         holder.content.text = notes.content
         holder.id = notes.noteId
@@ -48,20 +48,17 @@ class NoteAdapter(private val context: Context,
             popupMenu.menuInflater.inflate(R.menu.note_menu, popupMenu.menu)
             popupMenu.gravity = Gravity.END
             popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener {
-                archiveNoteFragment = ArchiveNoteFragment()
-                viewNotesFragment = ViewNotesFragment()
                 when(it.itemId) {
                     R.id.archive_note -> {
                         if (notes.archive) {
 
                         }
-                        val aNote = noteList.removeAt(position)
+                        val aNote = allNotes.removeAt(position)
                         notifyItemRemoved(position)
-                        notifyItemRangeChanged(position, noteList.size)
-                        archiveNoteFragment.getArchive(aNote)
+                        notifyItemRangeChanged(position, allNotes.size)
                     }
                     R.id.delete_note -> {
-                        val removeNote = noteList.removeAt(position)
+                        val removeNote = allNotes.removeAt(position)
                         deleteNotes(removeNote)
                     }
                 }
@@ -103,11 +100,11 @@ class NoteAdapter(private val context: Context,
     }
 
     override fun getItemCount(): Int {
-        return noteList.size
+        return allNotes.size
     }
 
     fun setListData(data: ArrayList<Notes>) {
-        noteList = data
+        allNotes = data
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -125,4 +122,32 @@ class NoteAdapter(private val context: Context,
         val cardNote: CardView = itemView.findViewById(R.id.note_card)
     }
 
+    override fun getFilter(): Filter {
+        return myFilter
+    }
+
+    var myFilter: Filter = object : Filter() {
+        override fun performFiltering(charSequence: CharSequence?): FilterResults? {
+            val filteredList: ArrayList<Notes> = arrayListOf()
+            if (charSequence.toString().isEmpty()) {
+                filteredList.addAll(allNotes)
+            } else {
+               for (notes in allNotes) {
+                   if (notes.title.lowercase(Locale.ROOT).contains(charSequence.toString()
+                           .lowercase(Locale.getDefault()))) {
+                       filteredList.add(notes)
+                   }
+               }
+            }
+            val filterResults = FilterResults()
+            filterResults.values = filteredList
+            return filterResults
+        }
+        @SuppressLint("NotifyDataSetChanged")
+        override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults) {
+            allNotes.clear()
+            allNotes.addAll(filterResults.values as Collection<Notes>)
+            notifyDataSetChanged()
+        }
+    }
 }

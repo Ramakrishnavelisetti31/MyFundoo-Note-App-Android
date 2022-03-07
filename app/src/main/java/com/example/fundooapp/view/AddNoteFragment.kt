@@ -59,17 +59,18 @@ class AddNoteFragment : Fragment() {
             noteViewModel.addNotes(notes, requireContext())
             noteViewModel.saveNoteStatus.observe(viewLifecycleOwner, Observer {
                 if (it.status) {
-                    val intent = Intent(requireContext(), HomeActivity::class.java)
-                    startActivity(intent)
+                    Toast.makeText(requireContext(), "NoteAdded ", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(requireContext(), "Error in adding notes ", Toast.LENGTH_SHORT).show()
                 }
             })
+            val intent = Intent(requireContext(), HomeActivity::class.java)
+            startActivity(intent)
         }
     }
 
     private fun goToHome() {
-        sharedViewModel.setGoToViewNotePage(true)
+        sharedViewModel.setGoToHomePageStatus(true)
     }
 
 }
