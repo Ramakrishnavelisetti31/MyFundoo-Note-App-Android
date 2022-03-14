@@ -122,8 +122,8 @@ class LoginFragment : Fragment() {
         val email = emailText.text.toString().trim()
         val password = passwordText.text.toString().trim()
         user = User(email = email, password = password)
-//        loginViewModel.fundooLogIn(user)
-        loginViewModel.apiLogIn(user)
+        loginViewModel.fundooLogIn(user)
+//        loginViewModel.apiLogIn(user)
         loginViewModel.loginStatus.observe(viewLifecycleOwner, Observer {
             if (it.status) {
                 sharedViewModel.setGoToHomePageStatus(true)

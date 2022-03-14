@@ -25,7 +25,7 @@ class Notification {
 
     private fun createSampleNotification(title: String, message:String, pendingIntent: PendingIntent, context: Context): Notification? {
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID).apply {
-            setSmallIcon(R.drawable.ic_baseline_edit_24)
+            setSmallIcon(R.drawable.fundoo_img1)
             setContentTitle(title)
             setContentText(message)
             setDefaults(NotificationCompat.DEFAULT_ALL)
@@ -35,7 +35,6 @@ class Notification {
         }
         return notificationBuilder.build()
     }
-
 
     companion object {
         const val  NOTIFICATION_ID = 1

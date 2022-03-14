@@ -3,6 +3,7 @@ package com.example.fundooapp.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -81,7 +82,9 @@ class HomeActivity : AppCompatActivity() {
         observeViews()
         isNetworkAvailable()
         searchNote()
-        viewNotes()
+        val handler = Handler()
+        handler.postDelayed({
+            viewNotes() }, 3000)
         pagination()
         navigationMenu()
         editProfile.setOnClickListener { openProfileFragment() }
@@ -96,6 +99,9 @@ class HomeActivity : AppCompatActivity() {
             noteAdapter.setListData(noteList)
             noteAdapter.notifyDataSetChanged()
         })
+        if (noteList.size == noteList.size) {
+            progressBar.visibility = View.GONE
+        }
     }
 
     private fun pagination() {
@@ -103,7 +109,6 @@ class HomeActivity : AppCompatActivity() {
             if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
                 progressBar.visibility = View.VISIBLE
                 viewNotes()
-                progressBar.visibility = View.GONE
             }
         })
     }

@@ -10,10 +10,11 @@ class AlarmReceiver: BroadcastReceiver() {
     private var notification = Notification()
     @SuppressLint("UnspecifiedImmutableFlag")
     override fun onReceive(context: Context?, intent: Intent?) {
-        val i = Intent(context, HomeActivity::class.java)
+        val i = Intent(context, ViewReminderNote::class.java)
         intent!!.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val pendingIntent = PendingIntent.getActivity(context, Notification.NOTIFICATION_ID, i, 0)
-      notification.createNotificationChannel(context!!, TITLE, MESSAGE, pendingIntent)
+        val pendingIntent = PendingIntent.getActivity(context, Notification.NOTIFICATION_ID, i, PendingIntent.FLAG_UPDATE_CURRENT)
+      notification.createNotificationChannel(context!!, intent.getStringExtra(TITLE).toString(),
+          intent.getStringExtra(MESSAGE).toString(), pendingIntent)
     }
 
     companion object {

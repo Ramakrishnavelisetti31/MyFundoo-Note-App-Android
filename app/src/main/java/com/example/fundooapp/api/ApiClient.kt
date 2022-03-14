@@ -14,7 +14,6 @@ class ApiClient {
         okHttpClient = value.addInterceptor(httpLoggingInterceptor).build()
     }
 
-
     private fun getRetrofit(): Retrofit {
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         return Retrofit.Builder()

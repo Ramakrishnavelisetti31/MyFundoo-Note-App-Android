@@ -11,7 +11,6 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 
-
 class NoteService {
     private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -53,6 +52,7 @@ class NoteService {
                     val id = document.id
                     val notes = Notes(title, content, id)
                     noteList.add(notes)
+                    Log.d("Noteservice", "${noteList.size}")
                     listener(AuthListener(true, "Fetch notes successfully"))
                 }
             }

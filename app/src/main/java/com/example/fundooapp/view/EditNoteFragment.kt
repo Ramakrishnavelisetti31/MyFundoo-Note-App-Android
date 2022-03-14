@@ -79,10 +79,12 @@ class EditNoteFragment : Fragment() {
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
-    private fun setReminder() {
+     fun setReminder() {
         alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), AlarmReceiver::class.java)
-        val message = editTitle.text.toString()
+        val title = notes.title
+        val message = notes.content
+        intent.putExtra(AlarmReceiver.TITLE, title)
         intent.putExtra(AlarmReceiver.MESSAGE, message)
         val time = getTime()
         val pendingIntent =  PendingIntent.getBroadcast(
@@ -132,6 +134,8 @@ class EditNoteFragment : Fragment() {
     }
 
     private fun goToHome() {
-        sharedViewModel.setGoToHomePageStatus(true)
+        val intent = Intent(requireContext(), HomeActivity::class.java)
+        startActivity(intent)
     }
+
 }

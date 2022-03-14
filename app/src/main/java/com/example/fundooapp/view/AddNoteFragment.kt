@@ -72,10 +72,12 @@ class AddNoteFragment : Fragment() {
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
-    private fun setReminder() {
+    fun setReminder() {
         alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), AlarmReceiver::class.java)
-        val message = writeTitle.text.toString()
+        val title = writeTitle.text.toString()
+        val message = writeContent.text.toString()
+        intent.putExtra(AlarmReceiver.TITLE, title)
         intent.putExtra(AlarmReceiver.MESSAGE, message)
         val time = getTime()
         val pendingIntent =  PendingIntent.getBroadcast(
