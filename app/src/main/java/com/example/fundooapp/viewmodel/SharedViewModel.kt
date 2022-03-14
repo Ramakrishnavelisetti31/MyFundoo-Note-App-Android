@@ -18,6 +18,9 @@ class SharedViewModel(val userAuthService: UserAuthService): ViewModel() {
     private val _goToAddNotePage = MutableLiveData<Boolean>()
     var goToAddNotePage = _goToAddNotePage as LiveData<Boolean>
 
+    private val _goToArchivePageStatus = MutableLiveData<Boolean>()
+    val goToArchivePageStatus = _goToArchivePageStatus as LiveData<Boolean>
+
 
     fun setGoToLoginPageStatus(status: Boolean) {
         _goToLoginPageStatus.value = status
@@ -29,6 +32,10 @@ class SharedViewModel(val userAuthService: UserAuthService): ViewModel() {
 
     fun setGoToHomePageStatus(status: Boolean) {
         _goToHomePageStatus.value = status
+    }
+
+    fun setGoToArchivePageStatus(status: Boolean) {
+        _goToArchivePageStatus.value = status
     }
 
     fun setGoToAddNotePage(status: Boolean) {

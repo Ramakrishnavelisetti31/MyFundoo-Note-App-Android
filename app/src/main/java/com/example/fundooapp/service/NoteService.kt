@@ -13,18 +13,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 
 class NoteService {
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var firestore: FirebaseFirestore
+    private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var collectionReference: CollectionReference
     private lateinit var documentReference: DocumentReference
     private lateinit var noteDataBase: NoteDataBase
-
-    init {
-        firebaseAuth = FirebaseAuth.getInstance()
-        firestore = FirebaseFirestore.getInstance()
-        collectionReference =
-            firestore.collection("users").document(firebaseAuth.currentUser!!.uid).collection("myNotes")
-    }
 
     fun storeNoteFirestore(notes: Notes, context: Context, listener: (AuthListener) -> Unit) {
         firebaseAuth.currentUser?.let {
@@ -40,9 +33,8 @@ class NoteService {
             noteDataBase = NoteDataBase(context)
             noteDataBase.saveData(notes)
             documentReference.set(notesDb).addOnCompleteListener {
-                    if (it.isSuccessful) {
+                if (it.isSuccessful) {
                         listener(AuthListener(true, "Added notes successfully"))
-                        Log.d("NoteService", "get failed with ${notes.userId}, ${notes.noteId}")
                     } else {
                         Log.d(ContentValues.TAG, "get failed with ", it.exception)
                     }

@@ -7,19 +7,42 @@
     android:background="@color/backGround"
     tools:context=".view.AddNoteFragment">
 
-    <ImageButton
-        android:id="@+id/back_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/backGround"
-        android:src="@drawable/ic_baseline_keyboard_backspace_24"
-        android:clickable="true"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/above_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/backGround"
+            android:src="@drawable/ic_baseline_keyboard_backspace_24"
+            android:clickable="true"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/reminder_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/backGround"
+            android:src="@drawable/ic_baseline_add_alert_24"
+            android:clickable="true"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <EditText
         android:id="@+id/write_edit_title"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_below="@id/back_button"
+        android:layout_below="@id/above_layout"
         android:layout_margin="10dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"

@@ -21,17 +21,16 @@ class NoteAdapter(private val context: Context,
                   private var noteList: ArrayList<Notes>): RecyclerView.Adapter<NoteAdapter.MyViewHolder>(), Filterable {
 
     private lateinit var noteService: NoteService
-    private lateinit var bundle: Bundle
+    private var bundle = Bundle()
     private var allNotes = arrayListOf<Notes>().apply {
         addAll(noteList)
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteAdapter.MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.notes_layout, parent, false)
         return MyViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: NoteAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val notes: Notes = allNotes[position]
         holder.title.text = notes.title
         holder.content.text = notes.content
@@ -51,11 +50,8 @@ class NoteAdapter(private val context: Context,
                 when(it.itemId) {
                     R.id.archive_note -> {
                         if (notes.archive) {
-
+                            val aNote = allNotes.removeAt(position)
                         }
-                        val aNote = allNotes.removeAt(position)
-                        notifyItemRemoved(position)
-                        notifyItemRangeChanged(position, allNotes.size)
                     }
                     R.id.delete_note -> {
                         val removeNote = allNotes.removeAt(position)
@@ -68,9 +64,15 @@ class NoteAdapter(private val context: Context,
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private fun deleteNotes(notes: Notes) {
+        noteService = NoteService()
+        noteService.deleteNotesFromFirestore(notes.noteId, context)
+        notifyDataSetChanged()
+    }
+
     private fun onCardClick(notes: Notes, holder: MyViewHolder) {
         holder.cardNote.setOnClickListener {
-            bundle = Bundle()
             bundle.putSerializable("note", notes)
             val editNoteFragment = EditNoteFragment()
             editNoteFragment.arguments = bundle
@@ -105,13 +107,6 @@ class NoteAdapter(private val context: Context,
 
     fun setListData(data: ArrayList<Notes>) {
         allNotes = data
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun deleteNotes(notes: Notes) {
-        noteService = NoteService()
-       noteService.deleteNotesFromFirestore(notes.noteId, context)
-        notifyDataSetChanged()
     }
 
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

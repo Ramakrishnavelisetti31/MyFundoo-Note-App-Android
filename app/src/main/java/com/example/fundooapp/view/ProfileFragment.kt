@@ -152,6 +152,7 @@ class ProfileFragment : DialogFragment() {
 
     private fun logOut(){
         firebaseAuth.signOut()
-        sharedViewModel.setGoToLoginPageStatus(true)
+        val intent = Intent(requireContext(), HomeActivity::class.java)
+        startActivity(intent)
     }
 }

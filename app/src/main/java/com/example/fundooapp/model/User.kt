@@ -6,6 +6,7 @@ data class User(
     var email: String = "",
     val password: String = "",
     val confirmPassword: String = "",
-    var imgUrl: String = ""
+    var imgUrl: String = "",
+    var returnSecureToken: Boolean = true
 )
 

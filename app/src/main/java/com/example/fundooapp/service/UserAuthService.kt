@@ -5,7 +5,9 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
+import com.example.fundooapp.api.ApiClient
 import com.example.fundooapp.model.Constant
+import com.example.fundooapp.model.LoginResponse
 import com.example.fundooapp.model.SharedPreference
 import com.example.fundooapp.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -13,24 +15,38 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class UserAuthService {
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var firestore: FirebaseFirestore
-    private lateinit var storageReference: StorageReference
-
-    init {
-        firebaseAuth = FirebaseAuth.getInstance()
-        firestore = FirebaseFirestore.getInstance()
-        storageReference = FirebaseStorage.getInstance().reference
-    }
+    private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var storageReference: StorageReference = FirebaseStorage.getInstance().reference
+    private var apiClient: ApiClient = ApiClient()
 
     fun userLogIn(user: User, listener: (AuthListener) -> Unit) {
+        loginWithApi(user.email, user.password, listener)
         firebaseAuth.signInWithEmailAndPassword(user.email,user.password).addOnCompleteListener {
             if (it.isSuccessful) {
                 listener(AuthListener(true, "Logged in Successfully"))
             }
         }
+    }
+
+    fun loginWithApi(email: String, password: String, listener: (AuthListener) -> Unit) {
+       apiClient.getService().login(User(email = email, password = password, returnSecureToken = true))
+       .enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                if (response.isSuccessful) {
+                    listener(AuthListener(true, "Logged in Successfully"))
+                }
+            }
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                val message = t.localizedMessage
+                Log.d("UserAuthService", "$message")
+            }
+        })
     }
 
     fun registerUser(user: User, listener: (AuthListener) -> Unit) {
@@ -42,7 +58,6 @@ class UserAuthService {
                 }
             }
     }
-
 
     fun storeImageToFireStore(imageUri: Uri, context: Context) {
         val fileRef =
@@ -58,7 +73,7 @@ class UserAuthService {
         }
     }
 
-    fun storeDataFirestore(user: User,  listener: (AuthListener) -> Unit) {
+    private fun storeDataFirestore(user: User, listener: (AuthListener) -> Unit) {
         val userDB: MutableMap<String, Any> = HashMap()
         userDB[NAME] = user.fullName
         userDB[EMAIL] = user.email
@@ -90,7 +105,6 @@ class UserAuthService {
                     SharedPreference.addString(Constant.USER_EMAIL, emailResult)
                     SharedPreference.addString(Constant.USER_PROFILE_PICTURE, imageUrl)
                     listener(AuthListener(true, "Fetched data successfully"))
-                    Log.d("UserAuthService", "get failed with ${SharedPreference.getString(Constant.USER_NAME)} ${emailResult} ${imageUrl}")
                 } else {
                     Log.d("UserAuthService", "get the data $it")
                 }
@@ -107,11 +121,11 @@ class UserAuthService {
     }
 
     companion object {
-        val NAME = "name"
-        val USER_NAME = "userName"
-        val EMAIL = "email"
-        val PASSWORD = "password"
-        val IMG_URL = "img_url"
+        const val NAME = "name"
+        const val USER_NAME = "userName"
+        const val EMAIL = "email"
+        const val PASSWORD = "password"
+        const val IMG_URL = "img_url"
     }
 }
 

@@ -74,4 +74,7 @@
     <string name="title">Title</string>
     <string name="note">Note</string>
     <string name="unarchive">UnArchive</string>
+    <string name="add_reminder">Add reminder</string>
+    <string name="save">save</string>
+    <string name="cancel">Cancel</string>
 </resources>

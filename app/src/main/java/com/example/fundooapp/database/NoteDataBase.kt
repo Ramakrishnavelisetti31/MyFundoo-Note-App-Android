@@ -59,6 +59,5 @@ class NoteDataBase(context: Context) :
         const val FIRE_STORE_NOTE_ID = "note_id"
         const val TITLE = "title"
         const val CONTENT = "content"
-        const val ONLINE = "online"
     }
 }

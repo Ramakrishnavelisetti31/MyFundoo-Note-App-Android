@@ -9,6 +9,7 @@ import com.example.fundooapp.service.AuthListener
 import com.example.fundooapp.service.NoteService
 
 class NoteViewModel(val noteService: NoteService): ViewModel() {
+
     private val _saveNoteStatus = MutableLiveData<AuthListener>()
     val saveNoteStatus =  _saveNoteStatus as LiveData<AuthListener>
 

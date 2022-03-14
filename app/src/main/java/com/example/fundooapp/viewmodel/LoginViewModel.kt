@@ -21,6 +21,14 @@ class LoginViewModel(val userAuthService: UserAuthService): ViewModel() {
         }
     }
 
+    fun apiLogIn(user: User) {
+        userAuthService.loginWithApi(user.email, user.password) {
+            if (it.status) {
+                _loginStatus.value = it
+            }
+        }
+    }
+
     fun googleSignIn(idToken: String) {
         userAuthService.googleLogIn(idToken) {
             if (it.status) {

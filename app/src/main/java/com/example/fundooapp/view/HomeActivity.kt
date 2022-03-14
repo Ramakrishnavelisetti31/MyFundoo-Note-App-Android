@@ -1,6 +1,7 @@
 package com.example.fundooapp.view
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -36,8 +37,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var notes: Notes
     private lateinit var nestedScrollView: NestedScrollView
     private lateinit var progressBar: ProgressBar
-    private var page = 0
-    private var item = 2
     private var flag = false
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var drawerLayout: DrawerLayout
@@ -78,23 +77,20 @@ class HomeActivity : AppCompatActivity() {
         noteAdapter = NoteAdapter(this, noteList)
         recyclerView.adapter = noteAdapter
         notes = Notes()
-        noteViewModel = ViewModelProvider(this, NoteViewModelFactory(NoteService()))[NoteViewModel::class.java]
+        noteViewModel = ViewModelProvider(this, NoteViewModelFactory(NoteService())) [NoteViewModel::class.java]
         observeViews()
         isNetworkAvailable()
         searchNote()
-        viewNotes(page, item)
+        viewNotes()
         pagination()
+        navigationMenu()
         editProfile.setOnClickListener { openProfileFragment() }
         addNoteFabButton.setOnClickListener { sharedViewModel.setGoToAddNotePage(true) }
         changeLayoutButton.setOnClickListener { changeView()}
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun viewNotes(page: Int, item: Int) {
-        if (page > item) {
-            progressBar.visibility = View.GONE
-            return
-        }
+    private fun viewNotes() {
         noteViewModel.getNotes(noteList, this)
         noteViewModel.getNoteStatus.observe(this, Observer {
             noteAdapter.setListData(noteList)
@@ -105,9 +101,9 @@ class HomeActivity : AppCompatActivity() {
     private fun pagination() {
         nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
-                page++
                 progressBar.visibility = View.VISIBLE
-                viewNotes(page, item)
+                viewNotes()
+                progressBar.visibility = View.GONE
             }
         })
     }
@@ -146,6 +142,13 @@ class HomeActivity : AppCompatActivity() {
                 goToAddNoteFragment()
             }
         })
+        sharedViewModel.goToArchivePageStatus.observe(this, Observer {
+            if (it == true) {
+                val intent = Intent(this, ArchivePage::class.java)
+                startActivity(intent)
+                drawerLayout.closeDrawers()
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -153,11 +156,22 @@ class HomeActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun navigationMenu() {
+        navigationView.setNavigationItemSelectedListener {
+            it.isChecked = true
+            when(it.itemId) {
+                R.id.nav_notes -> drawerLayout.closeDrawers()
+                R.id.nav_archive -> sharedViewModel.setGoToArchivePageStatus(true)
+            }
+            true
+        }
+    }
+
     private fun openProfileFragment() {
         val dialog = ProfileFragment()
         dialog.show(supportFragmentManager, "Open profile fragment")
     }
-    
+
     private fun isNetworkAvailable() {
         networkConnectivity.observe(this, Observer { isAvailable ->
             if (isAvailable) {
@@ -167,4 +181,5 @@ class HomeActivity : AppCompatActivity() {
             }
         })
     }
+
 }
