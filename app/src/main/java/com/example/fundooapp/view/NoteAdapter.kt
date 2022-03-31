@@ -25,6 +25,7 @@ class NoteAdapter(private val context: Context,
     private var allNotes = arrayListOf<Notes>().apply {
         addAll(noteList)
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.notes_layout, parent, false)
         return MyViewHolder(itemView)

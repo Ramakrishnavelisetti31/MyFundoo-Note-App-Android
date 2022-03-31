@@ -3,7 +3,6 @@ package com.example.fundooapp.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -82,9 +81,7 @@ class HomeActivity : AppCompatActivity() {
         observeViews()
         isNetworkAvailable()
         searchNote()
-        val handler = Handler()
-        handler.postDelayed({
-            viewNotes() }, 3000)
+        viewNotes()
         pagination()
         navigationMenu()
         editProfile.setOnClickListener { openProfileFragment() }

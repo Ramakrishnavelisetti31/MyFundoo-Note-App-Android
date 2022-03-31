@@ -60,6 +60,7 @@ class NoteService {
 
     @SuppressLint("NotifyDataSetChanged")
     fun deleteNotesFromFirestore(noteId: String, context: Context) {
+        collectionReference = firestore.collection("users").document(firebaseAuth.currentUser!!.uid).collection("myNotes")
         noteDataBase = NoteDataBase(context)
         noteDataBase.deleteData(noteId)
         collectionReference.document(noteId).delete().addOnCompleteListener {

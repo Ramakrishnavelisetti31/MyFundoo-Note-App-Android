@@ -14,6 +14,9 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.example.fundooapp.R
 import com.example.fundooapp.model.Notes
 import com.example.fundooapp.service.NoteService
@@ -24,6 +27,7 @@ import com.example.fundooapp.viewmodel.SharedViewModel
 import com.example.fundooapp.viewmodel.SharedViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class AddNoteFragment : Fragment() {
     private lateinit var writeTitle: EditText
@@ -67,7 +71,7 @@ class AddNoteFragment : Fragment() {
         openReminder.setOnClickListener { showReminderDialog.show() }
         saveReminder.setOnClickListener {
             createNote()
-            setReminder()
+            setAlarm()
         }
     }
 
@@ -90,6 +94,21 @@ class AddNoteFragment : Fragment() {
             AlarmManager.RTC_WAKEUP, time,
             AlarmManager.INTERVAL_DAY, pendingIntent
         )
+    }
+
+    private fun setAlarm() {
+        val time = getTime()
+        val todayTime = Calendar.getInstance()
+        val delayTime = (time/1000L - (todayTime.timeInMillis/1000L))
+        val title = writeTitle.text.toString()
+        val message = writeContent.text.toString()
+        val myWork = OneTimeWorkRequestBuilder<WorkAlarm>()
+            .setInitialDelay(delayTime, TimeUnit.SECONDS)
+            .setInputData(workDataOf(
+                WorkAlarm.TITLE to title,
+                WorkAlarm.MESSAGE to message
+            )).build()
+        WorkManager.getInstance(requireContext()).enqueue(myWork)
         Toast.makeText(requireContext(), "Reminder is added", Toast.LENGTH_SHORT).show()
     }
 
